@@ -1,0 +1,63 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: openspec-postgres
+    environment:
+      POSTGRES_DB: demodb
+      POSTGRES_USER: demo
+      POSTGRES_PASSWORD: demo
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U demo -d demodb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ../openspec-demo-backend
+    container_name: openspec-backend
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: demodb
+      DB_USERNAME: demo
+      DB_PASSWORD: demo
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ../openspec-demo-frontend
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:8080
+    container_name: openspec-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      BACKEND_URL: http://backend:8080
+      NEXT_PUBLIC_API_URL: http://localhost:8080
+    depends_on:
+      - backend
+
+  backoffice:
+    build:
+      context: ../openspec-demo-backoffice
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:8080
+    container_name: openspec-backoffice
+    ports:
+      - "3001:3001"
+    environment:
+      BACKEND_URL: http://backend:8080
+      NEXT_PUBLIC_API_URL: http://localhost:8080
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
