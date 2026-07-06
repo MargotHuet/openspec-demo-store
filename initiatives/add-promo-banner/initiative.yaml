@@ -1,0 +1,10 @@
+version: 1
+id: add-promo-banner
+title: Bannière promotionnelle configurable
+summary: Permettre à l'admin de créer/modifier/supprimer une bannière
+  promotionnelle (titre, texte, couleur de fond) depuis le backoffice, et
+  l'afficher sur le frontend.
+status: complete
+created: 2026-07-06
+owners: []
+metadata: {}
