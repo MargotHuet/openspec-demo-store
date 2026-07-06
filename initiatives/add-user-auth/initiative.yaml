@@ -3,9 +3,9 @@ id: add-user-auth
 title: Authentification JWT cross-repo
 summary: Sécuriser le backoffice (ADMIN) et permettre la connexion sur le
   frontend (USER) via JWT stateless. Backend/frontend/backoffice implémentés ;
-  reste à vérifier le flux Docker Compose complet (CORS + cookies cross-origin
-  entre ports 3000/3001/8080).
-status: exploring
+  flux Docker Compose complet (CORS + cookies cross-origin entre ports
+  3000/3001/8080) vérifié.
+status: complete
 created: 2026-07-06
 owners: []
 metadata: {}

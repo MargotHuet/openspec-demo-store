@@ -58,6 +58,20 @@ openspec context-store list                            # liste les stores enregi
 openspec initiative list --store openspec-demo-store    # liste les initiatives en cours
 ```
 
+## Qui rédige les fichiers OpenSpec ?
+
+Les fichiers `.md` (`requirements.md`, `design.md`, `proposal.md`, `tasks.md`, etc.) ne sont **pas à écrire à la main**. Chaque repo applicatif (`openspec-demo-backend`, `openspec-demo-frontend`, `openspec-demo-backoffice`) embarque des skills Claude Code dédiées (`.claude/skills/openspec-*`, exposées via les commandes `/opsx:*`) qui génèrent et maintiennent ces fichiers.
+
+Le rôle du développeur est de **décrire son besoin en langage naturel** et de **valider** ce que l'agent propose avant l'implémentation. Déroulé dans un repo applicatif :
+
+1. `/opsx:explore` — l'agent explore le code existant pertinent pour la demande.
+2. `/opsx:propose` — l'agent rédige un brouillon (`proposal.md` + `tasks.md` + deltas de specs) dans `openspec/changes/<id>/`. Rien n'est encore implémenté à ce stade.
+3. Le développeur relit et ajuste (peut redemander une révision à l'agent).
+4. `/opsx:apply` — l'agent implémente les tâches une par une, en cochant `tasks.md` au fur et à mesure.
+5. `/opsx:archive` — une fois le change terminé, l'agent l'archive et met à jour les specs officielles du repo (`openspec/specs/`).
+
+Pour un sujet **cross-repo** (ex : l'authentification JWT), on part de l'initiative dans ce repo (`openspec-demo-store`) comme décrit ci-dessus, puis on décline le même cycle propose → apply → archive dans chaque repo impacté.
+
 ## Démarrage local
 
 Les 3 repos applicatifs et ce repo doivent être clonés côte à côte (même dossier parent), car `docker-compose.yml` référence les autres repos par chemin relatif :
